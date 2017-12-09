@@ -36,6 +36,15 @@
 		  		currentBuzzObject.play();
          		song.playing = true;
 		  };
+  /**
+ * @function stopSong
+ * @desc Stops the currentBuzzObject file
+ * @param {Object} song
+ */
+          var stopSong = function(song){
+                currentBuzzObject.stop();
+                SongPlayer.currentSong.playing = null;
+          };
  /**
  * @function getSongIndex
  * @desc Get the index of a song
@@ -44,6 +53,14 @@
           var getSongIndex = function(song) {
                 return currentAlbum.songs.indexOf(song);
           };             	  
+ /**
+ * @function getLastSongIndex
+ * @desc Get the index of the last song
+ * @param {Object} song
+ */
+          var getLastSongIndex = function(song) {
+                return currentAlbum.songs.lastIndexOf(song);
+          };     
  /**
  * @desc Stores the current song
  * @type {Object}
@@ -76,9 +93,6 @@
      		song.playing = false;
  		  };
 
-          return SongPlayer;
-     }
-
  /**
  * @function SongPlayer.previous
  * @desc Go to the previous song
@@ -88,14 +102,32 @@
             currentSongIndex--;
 
             if (currentSongIndex < 0) {
-                currentBuzzObject.stop();
-                SongPlayer.currentSong.playing = null;
+                stopSong(play);
             } else {
                 var song = currentAlbum.songs[currentSongIndex];
                 setSong(song);
                 playSong(song);
             }
           }; 
+ /**
+ * @function SongPlayer.next
+ * @desc Go to the next song
+ */
+          SongPlayer.next = function() {
+            var currentSongIndex = getSongIndex(SongPlayer.currentSong);
+            currentSongIndex++;
+
+            if (currentSongIndex === getLastSongIndex) {
+                stopSong(play);
+            } else {
+                var song = currentAlbum.songs[currentSongIndex];
+                setSong(song);
+                playSong(song);
+            }
+          };
+          
+          return SongPlayer;
+     }          
  
      angular
          .module('blocJams')
